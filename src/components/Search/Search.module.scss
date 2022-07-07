@@ -1,0 +1,28 @@
+@import 'src/styles/variables.scss';
+@import 'src/styles/font-weight.scss';
+
+
+
+.SearchContainer {
+    width: 100%;
+    border-radius: 3rem;
+    padding: .5rem 2rem;
+    background-color: rgba($color: $primary, $alpha: .2);
+
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .Input {
+        background-color: transparent;
+        width: 100%;
+        border: 0;
+        font-weight: $medium;
+        font-size: 1.1rem;
+        color: $gray-12;
+        outline: none;
+        padding: .2rem 0;
+    }
+}
+
+

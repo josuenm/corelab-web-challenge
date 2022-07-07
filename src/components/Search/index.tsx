@@ -1,3 +1,6 @@
+import styles from './Search.module.scss';
+import SearchIcon from 'src/assets/search_icon.svg';
+
 interface ISearch {
   placeholder: string;
   value: string;
@@ -6,7 +9,15 @@ interface ISearch {
 
 const Search = (props: ISearch) => {
   return (
-    <input type="text" placeholder={props.placeholder} value={props.value} />
+    <label htmlFor="search_input" className={styles.SearchContainer}>
+      <img src={SearchIcon} alt="Icone de pesquisa" />
+      <input 
+        type="text" 
+        placeholder={props.placeholder} 
+        value={props.value}
+        className={styles.Input}
+        id="search_input" />
+    </label>
   );
 };
 

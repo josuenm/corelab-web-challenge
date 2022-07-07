@@ -1,0 +1,24 @@
+@import 'src/styles/variables.scss';
+@import 'src/styles/font-weight.scss';
+
+
+
+
+.Button {
+    width: fit-content;
+    margin: 0 auto;
+    background-color: rgba($color: $primary,$alpha: .7);
+    border: 0;
+    padding: .3rem 1.5rem;
+    border-radius: 3rem;
+    font-size: 1.2rem;
+    line-height: 1.6rem;
+    cursor: pointer;
+    color: $gray-12;
+    font-weight: $medium;
+
+    transition: ease .4s opacity;
+    &:hover {
+        opacity: .7;
+    }
+}

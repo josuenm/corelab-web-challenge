@@ -1,16 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.module.scss';
-import VehiclesPage from './pages/Vehicles';
+import HomePage from 'src/pages/Home';
 import reportWebVitals from './reportWebVitals';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { VehicleContextProvider } from './contexts/VehicleContext';
+
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
-    <VehiclesPage />
-  </React.StrictMode>
+  <VehicleContextProvider>
+    <React.StrictMode>
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+        </Routes>
+      </Router>
+    </React.StrictMode>
+  </VehicleContextProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

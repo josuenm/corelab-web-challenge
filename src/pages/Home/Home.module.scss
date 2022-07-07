@@ -1,0 +1,95 @@
+@import 'src/styles/break-points.scss';
+@import 'src/styles/variables.scss';
+@import 'src/styles/font-weight.scss';
+
+.Home {
+  display: grid;
+  padding: 3rem 1rem;
+  
+  @include desktop {
+    padding: 3rem 0;
+  }
+
+  .main {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    
+    @include desktop {
+      display: grid;
+      gap: 1rem;
+      max-width: calc(3*200px + 2*1rem);
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .search_container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+
+      .icon_container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border-radius: 50%;
+        padding: .5rem;
+
+        transition: ease .4s background-color;
+        &:hover {
+          background-color: rgba($color: $primary, $alpha: .2);
+        }
+      }
+    }
+
+    .card_list_container {
+      padding-top: 3rem;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      
+      .card_list_title {
+        color: #000;
+        font-weight: $semi-bold;
+        font-size: 1.1rem;
+        line-height: 1.5rem;
+      }
+      
+      .card_list {
+        max-width: calc(2*200px + 1rem);
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin: 0 auto;
+        
+        @include tablet {
+          max-width: calc(3*200px + 2*2rem);
+          flex-direction: row;
+          align-items: none;
+          gap: 2rem;
+        }
+
+        @include desktop {
+          max-width: calc(3*200px + 2*1rem);
+          flex-direction: row;
+          align-items: none;
+          gap: 1rem;
+        }
+
+        .empty_list_container {
+          width: 100%;
+
+          .title {
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
+}
