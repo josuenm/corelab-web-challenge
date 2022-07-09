@@ -28,7 +28,7 @@
     z-index: 2;
     background-color: #fff;
     padding: 2rem;
-    border-radius: 1rem;
+    border-radius: .5rem;
 
     @include desktop {
         max-width: 450px;
@@ -41,8 +41,8 @@
         gap: 1rem;
 
         .Submit_Container {
-            display: flex;
-            justify-content: flex-end;
+            width: 100%;
+            margin-top: 1.5rem;
         }
     }
 }
@@ -62,7 +62,12 @@
     padding: .5rem;
 
     transition: ease .4s background-color;
-    &:hover {
-        background-color: $primary;
+    &:active {
+        background-color: #fff;
+    }
+    @include desktop {
+        &:hover {
+            background-color: #fff;
+        }
     }
 }

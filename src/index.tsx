@@ -5,6 +5,8 @@ import HomePage from 'src/pages/Home';
 import reportWebVitals from './reportWebVitals';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { VehicleContextProvider } from './contexts/VehicleContext';
+import LoginPage from './pages/Login';
+import RegisterPage from './pages/Register';
 
 
 const root = ReactDOM.createRoot(
@@ -16,6 +18,8 @@ root.render(
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
         </Routes>
       </Router>
     </React.StrictMode>

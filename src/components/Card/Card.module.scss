@@ -1,10 +1,10 @@
 @import 'src/styles/variables.scss';
+@import 'src/styles/break-points.scss';
 
 
 
 .Card {
   position: relative;
-  max-width: 200px;
   width: 100%;
   padding: .5rem 1rem 1rem 1rem;
   text-align: left;
@@ -15,10 +15,21 @@
   transition: color 0.15s ease, border-color 0.15s ease;
   cursor: pointer;
 
+  @include desktop {
+    max-width: 200px;
+
+    &:hover,
+    &:focus,
+    &:active {
+      border-color: $primary;
+    }
+  }
+
   header {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     gap: .5rem;
+
 
     .icon_container {
       width: 35px;
@@ -28,10 +39,16 @@
       align-items: center;
       padding: 1rem;
       border-radius: 50%;
-
       transition: background-color .4s ease;
-      &:hover {
+      
+      &:active {
         background-color: #eaeaea;
+      }
+
+      @include desktop {
+        &:hover {
+          background-color: #eaeaea;
+        }
       }
 
       .delete_icon {
@@ -43,12 +60,6 @@
         height: 25px;
       }
     }
-  }
-
-  &:hover,
-  &:focus,
-  &:active {
-    border-color: #000;
   }
 
   h2 {

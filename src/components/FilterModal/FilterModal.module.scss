@@ -1,4 +1,5 @@
 @import 'src/styles/variables.scss';
+@import 'src/styles/font-weight.scss';
 @import 'src/styles/break-points.scss';
 
 
@@ -28,7 +29,7 @@
     transform: translate(-50%, -50%);
     z-index: 2;
     background-color: #fff;
-    border-radius: 1rem;
+    border-radius: .5rem;
     padding: 2rem;
     
     display: flex;
@@ -40,6 +41,24 @@
         padding: 3rem;
     }
 
+    .Complete_Select_Container {
+        display: flex;
+        flex-direction: column;
+        gap: .2rem;
+    
+        select {
+            border-radius: .25rem;
+            font-size: 1rem;
+            padding: .5rem .8rem;
+            border: 0;
+            cursor: pointer;
+    
+            -webkit-appearance: none !important;
+            -moz-appearance: none;
+            background: #efefef url('../../assets/dropdown_icon.svg') no-repeat 95% center;
+        }
+    }
+
     .pricing_container {
         display: flex;
         justify-content: space-between;
@@ -48,17 +67,27 @@
         .pricing_input_container {
             display: flex;
             flex-direction: column;
+
+            .Input {
+                width: 100%;
+                border: 0;
+                border-radius: .25rem;
+                padding: .5rem 1rem;
+                font-size: 1rem;
+                background-color: #efefef;
+            }
         }
     }
 
-    .button_container {
+    .Button_Container {
         width: 100%;
-        display: flex;
-        justify-content: flex-end;
+        margin-top: 1rem;
+    }
 
-        button {
-            margin: 0 !important;
-        }
+    .error_message {
+        font-size: .9rem;
+        line-height: 1.3rem;
+        color: rgb(230, 76, 76);
     }
 }
 
@@ -75,9 +104,42 @@
     cursor: pointer;
     border-radius: 50%;
     padding: .5rem;
-
+    
     transition: ease .4s background-color;
-    &:hover {
-        background-color: $primary;
+    &:active {
+        background-color: #fff;
+    }
+    @include desktop {
+        &:hover {
+            background-color: #fff;
+        }
+    }
+}
+
+
+
+
+
+.Filter_Button {
+    padding: .3rem 2rem;
+    border: 0;
+    border-radius: .25rem;
+    font-size: 1rem;
+    line-height: 1.4rem;
+    font-weight: $semi-bold;
+    border: 1px solid $primary;
+    background-color: transparent;
+    color: $primary;
+    
+    transition: ease .4s opacity;
+    &:active {
+        opacity: .6;
+    }
+
+
+    @include desktop {
+        &:hover {
+            opacity: .6;
+        }
     }
 }

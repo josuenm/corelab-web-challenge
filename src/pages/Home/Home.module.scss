@@ -3,6 +3,9 @@
 @import 'src/styles/font-weight.scss';
 
 .Home {
+  max-width: 1140px;
+  height: 100vh;
+  margin: 0 auto;
   display: grid;
   padding: 3rem 1rem;
   
@@ -11,35 +14,47 @@
   }
 
   .main {
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    padding-bottom: 4rem;
     
     @include desktop {
-      display: grid;
-      gap: 1rem;
       max-width: calc(3*200px + 2*1rem);
-      width: 100%;
       margin: 0 auto;
     }
 
-    .search_container {
+    .Add_Button {
+      margin-top: 3rem;
+      width: 100%;
       display: flex;
+      flex-direction: column;
+      gap: 1rem;
       align-items: center;
-      justify-content: space-between;
-      gap: 2rem;
+      justify-content: center;
+      text-align: center;
 
-      .icon_container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        border-radius: 50%;
-        padding: .5rem;
+      h2 {
+        font-size: 1.5rem;
+        line-height: 1.9rem;
+      }
 
-        transition: ease .4s background-color;
+      button {
+        max-width: 350px;
+        width: 100%;
+        background-color: $primary;
+        border: 0;
+        border-radius: .25rem;
+        padding: .7rem 1.2rem;
+        font-size: 1.1rem;
+        line-height: 1.5rem;
+        font-weight: $semi-bold;
+        color: #fff;
+
+        transition: ease .4s opacity;
         &:hover {
-          background-color: rgba($color: $primary, $alpha: .2);
+          opacity: .7;
         }
       }
     }

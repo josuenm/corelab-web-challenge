@@ -4,9 +4,12 @@ import { CompleteInput, Submit } from 'src/components/Form';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
+import { parseCookies } from 'nookies';
+import { useContext } from 'react';
+import { IVehicleContextProps, VehicleContext } from 'src/contexts/VehicleContext';
 
 
-type Inputs = {
+type IInputs = {
   name: string,
   brand: string,
   color: string,
@@ -15,9 +18,9 @@ type Inputs = {
 };
 
 
-interface NewAdModalProps {
+interface INewAdModalProps {
     isActive: boolean;
-    setIsModalActive: (value: boolean) => void;
+    setIsModalActive: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 
@@ -32,13 +35,26 @@ const schema = yup.object({
 
 
 
-const NewAdModal = ({ isActive, setIsModalActive }: NewAdModalProps) => {
+const NewAdModal = ({ isActive, setIsModalActive }: INewAdModalProps) => {
 
-    const { register, handleSubmit, formState: { errors } } = useForm<Inputs>({
+    const cookies = parseCookies();
+    const { insertVehicle } = useContext(VehicleContext) as IVehicleContextProps
+
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<IInputs>({
         resolver: yupResolver(schema)
     });
 
-    const onSubmit: SubmitHandler<Inputs> = data => console.log(data);
+    const onSubmit: SubmitHandler<IInputs> = async (data) => {
+        insertVehicle(data)
+
+        reset({
+            name: '',
+            brand: '',
+            color: '',
+            year: 0,
+            plate: ''
+        })
+    };
 
 
     const closeModal = () => setIsModalActive(false);

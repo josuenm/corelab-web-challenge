@@ -1,0 +1,29 @@
+@import 'src/styles/variables';
+
+
+
+.Container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.SmallLoading {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+
+    border-top: 3px solid $primary;
+    border-left: 1px solid $primary;
+
+    animation: loading .5s linear infinite forwards;
+
+    @keyframes loading {
+        to {
+            transform: rotate(390deg);
+        }
+    }
+}

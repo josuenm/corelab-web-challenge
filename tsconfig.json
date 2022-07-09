@@ -22,12 +22,13 @@
     "baseUrl": ".",
     "paths": {
       "src/components/*": ["./src/components/*"],
-      "src/lib/*": ["./src/lib/*"],
+      "src/lib/*": ["src/services/*"],
       "src/types/*": ["./src/types/*"],
       "src/pages/*": ["./src/pages/*"],
       "src/styles/*": ["./src/styles/*"],
       "src/assets/*": ["./src/assets/*"],
       "src/contexts/*": ["./src/contexts/*"],
+      "src/services/*": ["./src/services/*"],
     }
   },
   "include": [

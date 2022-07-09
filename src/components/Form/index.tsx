@@ -2,43 +2,13 @@ import styles from './Form.module.scss';
 
 
 
-interface CompleteInputProps {
+interface ICompleteInputProps {
     label: string;
     placeholder?: string;
     register?: any;
     error?: string;
     type?: string;
 }
-
-type ItemProps = {
-    id: number, 
-    value: string, 
-    title: string
-}
-
-
-interface CompleteSelectProps {
-    label: string;
-    data: ItemProps[];
-}
-
-
-interface InputProps {
-    type: string;
-    placeholder?: string;
-}
-
-
-
-const Input = ({ type, placeholder = "" }: InputProps) => {
-    return (
-        <input 
-            type={type} 
-            className={styles.Input} 
-            placeholder={placeholder} />
-    )
-}
-
 
 
 const deleteSpaces = (value: string) => value.replace(/\s/g, '')
@@ -57,7 +27,7 @@ const Label = ({ label }: { label: string }) => {
 
 const CompleteInput = ({ 
         label, placeholder = "", type = "text", register, error 
-    }: CompleteInputProps) => {
+    }: ICompleteInputProps) => {
 
     const newLabel = deleteSpaces(label)
 
@@ -76,30 +46,16 @@ const CompleteInput = ({
 }
 
 
-
-const Select = ({ label, data }: CompleteSelectProps) => {
-
-    const newLabel = deleteSpaces(label)
-
+const Submit = ({ title, disabled = false }: { title: string, disabled?: boolean }) => {
     return (
-        <div className={styles.Complete_Select_Container}>
-            <Label label={label} />
-
-            <select name="" id={newLabel}>
-            {data.map((item) => (
-                <option value={item.value} key={item.id}>{item.title}</option>
-            ))}
-            </select>
-        </div>
+        <button 
+            type="submit" 
+            className={styles.Submit}
+            data-disabled={disabled}>
+                {title}
+        </button>
     )
 }
 
 
-const Submit = ({ title }: { title: string }) => {
-    return (
-        <button type="submit" className={styles.Submit}>{title}</button>
-    )
-}
-
-
-export { CompleteInput, Select, Submit, Label, Input };
+export { CompleteInput, Submit, Label };

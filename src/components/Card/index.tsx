@@ -16,14 +16,10 @@ interface ICard {
 
 const Card = (props: ICard) => {
 
-
   return (
     <div className={styles.Card}>
 
       <header>
-        <div className={styles.icon_container}>
-          <img src={DeleteIcon} alt="Botão de remover" className={styles.delete_icon} />
-        </div>
         <div className={styles.icon_container}>
           {props.isFavorited ?(
             <img 
@@ -36,6 +32,9 @@ const Card = (props: ICard) => {
               alt="Botão de adicionar aofavorito" 
               className={styles.favorite_icon} />
           )}
+        </div>
+        <div className={styles.icon_container}>
+          <img src={DeleteIcon} alt="Botão de remover" className={styles.delete_icon} />
         </div>
       </header>
       <h2 className={styles.card_list_title}>{props.title}</h2>
