@@ -1,6 +1,6 @@
 import styles from './Home.module.scss';
 
-import Card from "src/components/Card";
+import { Card } from "src/components/Card";
 import Search from "src/components/Search";
 import NewVehicleModal from "src/components/NewVehicleModal";
 import { FilterButton, FilterModal } from 'src/components/FilterModal';
@@ -29,8 +29,10 @@ const Home = () => {
                     </Search>
 
                     {/* Modals */}
-                    <NewVehicleModal isActive={newModalState} setIsModalActive={setNewModalState} />
-                    <FilterModal isActive={filterModalState} setIsModalActive={setFilterModalState} />
+                    {newModalState && <NewVehicleModal setIsModalActive={setNewModalState} /> }
+                    {filterModalState && (
+                        <FilterModal setIsModalActive={setFilterModalState} />
+                    ) }
 
                     <div className={styles.Add_Button}>
                         <h2>Adicione um novo anúncio</h2>
@@ -45,13 +47,7 @@ const Home = () => {
                     <div className={styles.card_list}>
                         {isLoading ? <SmallLoading /> : (
                             favorites.length >= 1 ? favorites.map((vehicle) => (
-                                <Card 
-                                    title={vehicle.name} 
-                                    description={vehicle.description} 
-                                    price={vehicle.price}
-                                    year={vehicle.year}
-                                    isFavorited={vehicle.isFavorite} 
-                                    key={vehicle._id} />
+                                <Card data={vehicle} key={vehicle._id} />
                             )) : (
                                 <div className={styles.empty_list_container}>
                                     <p className={styles.title}>Nenhum anúncio foi encontrado</p>
@@ -68,13 +64,7 @@ const Home = () => {
                     <div className={styles.card_list}>
                         {isLoading ? <SmallLoading /> : (
                             vehicles.length >= 1 ? vehicles.map((vehicle) => (
-                                <Card 
-                                    title={vehicle.name} 
-                                    description={vehicle.description} 
-                                    price={vehicle.price}
-                                    year={vehicle.year}
-                                    isFavorited={vehicle.isFavorite} 
-                                    key={vehicle._id} />
+                                <Card data={vehicle} key={vehicle._id} />
                             )) : (
                                 <div className={styles.empty_list_container}>
                                     <p className={styles.title}>Nenhum anúncio foi encontrado</p>

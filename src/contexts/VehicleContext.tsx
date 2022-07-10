@@ -10,9 +10,9 @@ interface IVehicleContextProviderProps {
 }
 
 interface IFilterAllVehicles {
-    models: string;
-    colors: string;
-    years: string;
+    brand: string;
+    color: string;
+    year: string;
     minPrice: number;
     maxPrice: number;
 }
@@ -21,13 +21,14 @@ interface IFilterAllVehicles {
 export interface IVehicleContextProps {
     vehicles: IVehicle[];
     favorites: IVehicle[];
-    insertVehicle: (vehicle: IVehicleDTO) => void;
-    deleteVehicle: (id: string) => void;
+    insertVehicle: (vehicle: IVehicleDTO) => Promise<void>;
+    deleteVehicle: (id: string) => Promise<boolean>;
     isLoading: boolean;
     listAllVehicles: () => void;
     searchVehicles: (value: string) => void;
     filterAllVehicles: (params: IFilterAllVehicles) => void;
     handleFavorite: (id: string) => void;
+    updateOne: ({ data, id }: { data: IVehicleDTO, id: string }) => void;
 }
 
 
@@ -50,23 +51,36 @@ const VehicleContextProvider = ({ children }: IVehicleContextProviderProps) => {
     const coreLabToken = cookies['corelab.token']
 
 
+
     const insertVehicle = async (vehicle: IVehicleDTO) => {
         const response = await vehicleApi.create({token: coreLabToken, vehicle})
 
-        setVehicles(prev => ({...prev, response}))
-        setOriginalVehicleList(prev => ({...prev, response}))
+        const newVehicleList = originalVehicleList
+
+        newVehicleList.push(response)
+
+        setVehicles(newVehicleList)
+        setOriginalVehicleList(newVehicleList)
     }
     
 
-    const deleteVehicle = (id: string) => {
-        const response = vehicleApi.deleteOne({ token: coreLabToken, id })
-        if(!response) return
 
-        const newVehiclesList = originalVehicleList.filter((item) => item._id !== id)
-        setVehicles(newVehiclesList)
-        setOriginalVehicleList(newVehiclesList)
+    const deleteVehicle = async (id: string) => {
+        const response = await vehicleApi.deleteOne({ token: coreLabToken, id })
+
+        if(!response) {
+            return false
+        } else {
+            const newVehiclesList = originalVehicleList.filter((item) => item._id !== id)
+            setVehicles(newVehiclesList)
+            const favoritesList = newVehiclesList.filter((vehicle) => vehicle.isFavorite === true)
+            setFavorites(favoritesList)
+            setOriginalVehicleList(newVehiclesList)
+            return true
+        }
     }
     
+
 
     const listAllVehicles = useCallback(async () => {
         setIsLoading(true)
@@ -81,17 +95,21 @@ const VehicleContextProvider = ({ children }: IVehicleContextProviderProps) => {
     }, [coreLabToken])
     
 
+
     const listAllFavorites = async (vehiclesList: IVehicle[]) => {
         const favoritesList = vehiclesList.filter((vehicle) => vehicle.isFavorite === true)
         setFavorites(favoritesList)
     }
 
+
+
     const handleFavorite = async (id: string) => {
-        await vehicleApi.handleFavorite({ token: coreLabToken, id })
+        const isFavoriteFound = originalVehicleList.filter((vehicle) => vehicle._id === id)
+        await vehicleApi.handleFavorite({ token: coreLabToken, id, isFavorite: !isFavoriteFound })
 
         const newVehicleList = originalVehicleList.map((vehicle) => {
             if(vehicle._id === id) {
-                vehicle.isFavorite = true
+                vehicle.isFavorite = !vehicle.isFavorite
                 return vehicle
             } else return vehicle
         })
@@ -103,9 +121,56 @@ const VehicleContextProvider = ({ children }: IVehicleContextProviderProps) => {
     }
     
 
-    const filterAllVehicles = ({ models, colors, years, minPrice, maxPrice }: IFilterAllVehicles) => {
 
+
+    const filterAllVehicles = ({ color, year, minPrice, maxPrice }: IFilterAllVehicles) => {
+        if(color.length === 0 && 
+            year.length === 0 && 
+            minPrice === 0 && 
+            maxPrice === 0) {
+
+            setVehicles(originalVehicleList)
+
+        }
+
+        const toFilter = {
+            color: color.toLocaleLowerCase(),
+            year: year.toString(),
+            minPrice: Number(minPrice),
+            maxPrice: Number(maxPrice)
+        }
+
+        let vehiclesValues = originalVehicleList.map((vehicle) => {
+            return Object.values({
+                name: vehicle.name.toLowerCase(),
+                description: vehicle.description?vehicle.description.toLowerCase():undefined,
+                plate: vehicle.plate.toLowerCase(),
+                year: vehicle.year.toString(),
+                color: vehicle.color.toLowerCase(),
+                price: Number(vehicle.price) || undefined
+            })
+        })
+        let vehiclesFiltered = []
+
+        for(let i = 0; i < originalVehicleList.length ;i++) {
+            if(vehiclesValues[i].includes(toFilter.color) ||
+                vehiclesValues[i].includes(toFilter.year) ||
+                Number(vehiclesValues[i]) >= minPrice || 
+                Number(vehiclesValues[i]) <= maxPrice) {
+                    vehiclesFiltered.push(originalVehicleList[i])
+            }
+        }
+
+        const favoriteVehiclesFound = vehiclesFiltered.filter((vehicle) => {
+            return vehicle.isFavorite === true
+        });
+        setFavorites(favoriteVehiclesFound);
+
+        setVehicles(vehiclesFiltered)
     }
+
+
+
 
     const searchVehicles = async (value: string) => {
         const toFind = value.toLowerCase();
@@ -153,14 +218,29 @@ const VehicleContextProvider = ({ children }: IVehicleContextProviderProps) => {
         setVehicles(vehiclesFiltered);
     }
 
+
+
+    const updateOne = async ({ data, id }: { data: IVehicleDTO, id: string }) => {
+        const response = await vehicleApi.updateOne({ id, token: coreLabToken, data })
+
+        setOriginalVehicleList((prev) => ({...prev, response}))
+        setVehicles((prev) => ({...prev, response}))
+    }
+
+
+
+
     useEffect(() => {
         listAllVehicles()
     }, [listAllVehicles])
 
 
+
+    
+
     return (
         <VehicleContext.Provider value={{
-            vehicles, favorites, insertVehicle, deleteVehicle, isLoading, listAllVehicles, searchVehicles, filterAllVehicles, handleFavorite
+            vehicles, favorites, insertVehicle, deleteVehicle, isLoading, listAllVehicles, searchVehicles, filterAllVehicles, handleFavorite, updateOne
         }}>
             {children}
         </VehicleContext.Provider>

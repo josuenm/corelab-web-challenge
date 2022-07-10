@@ -1,11 +1,12 @@
-import styles from './NewVehicleModal.module.scss';
+import styles from './EditVehicleModal.module.scss';
 import BackButtonIcon from 'src/assets/arrow_left_icon.svg';
 import { CompleteInput, Submit } from 'src/components/Form';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { IVehicleContextProps, VehicleContext } from 'src/contexts/VehicleContext';
+import { IVehicleDTO } from 'src/types/Vehicle';
 
 
 type IInputs = {
@@ -19,8 +20,10 @@ type IInputs = {
 };
 
 
-interface INewAdModalProps {
-    setIsModalActive: React.Dispatch<React.SetStateAction<boolean>>;
+interface IEditVehicleModalProps {
+    close: React.Dispatch<React.SetStateAction<boolean>>;
+    id: string;
+    dataToEdit: IVehicleDTO;
 }
 
 
@@ -37,32 +40,33 @@ const schema = yup.object({
 
 
 
-const NewAdModal = ({ setIsModalActive }: INewAdModalProps) => {
+const EditVehicleModal = ({ dataToEdit, close, id }: IEditVehicleModalProps) => {
 
-    const { insertVehicle } = useContext(VehicleContext) as IVehicleContextProps
+    const { updateOne } = useContext(VehicleContext) as IVehicleContextProps
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm<IInputs>({
-        resolver: yupResolver(schema)
+        resolver: yupResolver(schema),
+        defaultValues: useMemo(() => {
+            return {...dataToEdit, price: dataToEdit.price || 0}
+        }, [dataToEdit])
     });
 
+    const closeModal = () => close(false);
+
+
     const onSubmit: SubmitHandler<IInputs> = async (data) => {
-        await insertVehicle(data)
+        updateOne({ data, id: id })
 
         reset({
             name: '',
-            description: '',
-            price: 0,
             brand: '',
             color: '',
             year: 0,
             plate: ''
         })
-
-        closeModal()
+        window.location.reload();
     };
 
-
-    const closeModal = () => setIsModalActive(false);
     
     return (
         <>
@@ -127,4 +131,4 @@ const NewAdModal = ({ setIsModalActive }: INewAdModalProps) => {
 }
 
 
-export default NewAdModal;
+export default EditVehicleModal;

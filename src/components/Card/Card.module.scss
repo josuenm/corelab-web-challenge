@@ -3,74 +3,77 @@
 
 
 
-.Card {
+.Card_Container {
   position: relative;
-  width: 100%;
-  padding: .5rem 1rem 1rem 1rem;
-  text-align: left;
-  color: inherit;
-  text-decoration: none;
-  border: 1px solid #eaeaea;
-  border-radius: 10px;
-  transition: color 0.15s ease, border-color 0.15s ease;
-  cursor: pointer;
 
-  @include desktop {
-    max-width: 200px;
-
-    &:hover,
-    &:focus,
-    &:active {
-      border-color: $primary;
-    }
-  }
-
-  header {
+  .icon_container {
+    position: absolute;
+    top: .5rem;
+    right: .5rem;
+    z-index: 1;
+    width: 35px;
+    height: 35px;
     display: flex;
-    justify-content: space-between;
-    gap: .5rem;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color .4s ease;
 
+    
+    &:active {
+      background-color: #eaeaea;
+    }
 
-    .icon_container {
-      width: 35px;
-      height: 35px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 1rem;
-      border-radius: 50%;
-      transition: background-color .4s ease;
-      
-      &:active {
+    @include desktop {
+      &:hover {
         background-color: #eaeaea;
       }
+    }
 
-      @include desktop {
-        &:hover {
-          background-color: #eaeaea;
-        }
-      }
-
-      .delete_icon {
-        width: 30px;
-        height: 30px;
-      }
-      .favorite_icon {
-        width: 25px;
-        height: 25px;
-      }
+    .delete_icon {
+      width: 30px;
+      height: 30px;
+    }
+    .favorite_icon {
+      width: 25px;
+      height: 25px;
     }
   }
 
-  h2 {
-    margin: 0 0 1rem 0;
-    font-size: 1.5rem;
+  .Card {
+    position: relative;
+    width: 100%;
+    padding: .5rem 1rem 1rem 1rem;
+    text-align: left;
+    color: inherit;
+    text-decoration: none;
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+    cursor: pointer;
+  
+    @include desktop {
+      width: 200px;
+  
+      &:hover,
+      &:focus,
+      &:active {
+        border-color: $primary;
+      }
+    }
+  
+    h2 {
+      margin: 0 0 1rem 0;
+      font-size: 1.5rem;
+    }
+  
+    p {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
   }
-
-  p {
-    margin: 0;
-    font-size: 1rem;
-    line-height: 1.5;
-  }
+  
 }
-

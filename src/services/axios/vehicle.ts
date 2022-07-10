@@ -21,16 +21,14 @@ interface ITokenAndId {
 
 
 const vehicleApi = {
-    create: async ({ token, vehicle }: IVehicleWithToken): Promise<IVehicleDTO | void> => {
+    create: async ({ token, vehicle }: IVehicleWithToken): Promise<IVehicle> => {
         const response = await api.post('/vehicle/create', vehicle, {
             headers: {
                 'corelab.token': token
             }
         })
 
-        if(response.status === 200) {
-            return response.data
-        }
+        return response.data
     },
 
     findAll: async (token: string): Promise<IVehicle[]> => {
@@ -57,24 +55,32 @@ const vehicleApi = {
         return response.data
     },
 
-    handleFavorite: async ({ id, token }: ITokenAndId): Promise<void> => {
-        await api.delete(`/vehicle/handleFavorite/${id}`, {
+    handleFavorite: async ({ id, token, isFavorite }: ITokenAndId & { isFavorite: boolean }): Promise<void> => {
+
+        await api.patch(`/vehicle/favorite/${id}`, isFavorite, {
             headers: {
                 'corelab.token': token
             }
         })
     },
 
-    deleteOne: async ({ token, id, }: ITokenAndId): Promise<void> => {
-        await api.delete(`/vehicle/deleteOne/${id}`, {
+    deleteOne: async ({ token, id, }: ITokenAndId): Promise<boolean | IVehicle> => {
+        const response = await api.delete(`/vehicle/deleteOne/${id}`, {
             headers: {
                 'corelab.token': token
             }
         })
+
+        if(response.status === 200) {
+            return response.data
+        } else {
+            return false
+        }
     },
 
-    updateOne: async ({ id, token }: ITokenAndId): Promise<IVehicle> => {
-        const response = await api.delete(`/vehicle/updateOne/${id}`, {
+    updateOne: 
+        async ({ id, token, data }: { id: string, token: string, data: IVehicleDTO }): Promise<IVehicle> => {
+        const response = await api.patch(`/vehicle/updateOne/${id}`, data, {
             headers: {
                 'corelab.token': token
             }

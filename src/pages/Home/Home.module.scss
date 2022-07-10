@@ -66,6 +66,7 @@
       flex-direction: column;
       gap: 1.2rem;
       
+      
       .card_list_title {
         color: #000;
         font-weight: $semi-bold;
@@ -95,6 +96,14 @@
           flex-direction: row;
           align-items: none;
           gap: 1rem;
+        }
+
+        .Link {
+          width: 100%;
+
+          @include desktop {
+            width: fit-content;
+          }
         }
 
         .empty_list_container {

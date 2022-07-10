@@ -1,0 +1,21 @@
+@import 'src/styles/variables.scss';
+
+
+
+.Main {
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.2rem;
+
+    .Title {
+        font-size: 2rem;
+        line-height: 2.4rem;
+        text-align: center;
+        color: $primary;
+    }
+}

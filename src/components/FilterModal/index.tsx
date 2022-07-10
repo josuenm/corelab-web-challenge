@@ -1,14 +1,22 @@
 import styles from './FilterModal.module.scss';
 import BackButtonIcon from 'src/assets/arrow_left_icon.svg';
-import Button from '../Button';
-import FilterIcon from "src/assets/filter_icon.svg"
-import { Label } from '../Form';
-import { useContext, useState } from 'react';
+import { Label, Submit } from '../Form';
+import { useContext, useMemo } from 'react';
 import { IVehicleContextProps, VehicleContext } from 'src/contexts/VehicleContext';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
+
+type IInputs = {
+    brand: string;
+    color: string;
+    year: string;
+    minPrice: number;
+    maxPrice: number;
+};
 
 interface IFilterModalProps {
-    isActive: boolean;
     setIsModalActive: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -18,41 +26,41 @@ interface IFilterButtonProps {
 
 
 
+const schema = yup.object({
+    maxPrice: yup.number().typeError('Insira um preço ou coloque zero').min(0, "Insira um preço válido"),
+    minPrice: yup.number().typeError('Insira um preço ou coloque zero').min(0, "Insira um preço válido").max(yup.ref('maxPrice'), "O preço mínimo não pode ser maior que o preço máximo")
+}).required();
 
 
-const FilterModal = ({ isActive, setIsModalActive }: IFilterModalProps) => {
+
+
+const FilterModal = ({ setIsModalActive }: IFilterModalProps) => {
 
     const closeModal = () => setIsModalActive(false);
     
     const { filterAllVehicles } = useContext(VehicleContext) as IVehicleContextProps;
-    
-    const [models, setModels] = useState<string>('');
-    const [colors, setColors] = useState<string>('');
-    const [years, setYears] = useState<string>('');
-    const [minPrice, setMinPrice] = useState<number>(0);
-    const [maxPrice, setMaxPrice] = useState<number>(0);
 
-    const [error, setError] = useState<string>('');
-
-
-    function handleFilter() {
-        if(minPrice > maxPrice) {
-            setError('O preço mínimo não pode ser maior que o preço máximo');
-        }
-
-        filterAllVehicles({models, colors, years, minPrice, maxPrice})
-    }
+    const { register, handleSubmit, formState: { errors } } = useForm<IInputs>({
+        resolver: yupResolver(schema),
+        defaultValues: useMemo(() => {
+            return {
+                minPrice: 0,
+                maxPrice: 0
+            }
+        }, [])
+    });
 
 
+    const onSubmit: SubmitHandler<IInputs> = async (data) => {
+        filterAllVehicles({
+            ...data,
+            minPrice: data.minPrice || 0,
+            maxPrice: data.maxPrice || 0,
+        })
 
-    const carModels = [
-        { id: 1, value: "", title: "Selecione um modelo" },
-        { id: 2, value: "Volkswagen", title:"Volkswagen" },
-        { id: 3, value: "Fiat", title:"Fiat" },
-        { id: 4, value: "Chevrolet", title:"Chevrolet" },
-        { id: 5, value: "Ford", title:"Ford" },
-        { id: 6, value: "Hyundai", title:"Hyundai" },
-    ]
+        closeModal()
+    };
+
     
     const carColors = [
         { id: 1, value: "", title: "Selecione uma cor" },
@@ -80,7 +88,6 @@ const FilterModal = ({ isActive, setIsModalActive }: IFilterModalProps) => {
         { id: 15, value: "2010", title: "2010" },
     ]
 
-    if(!isActive) return <></>
     return (
         <>
             <div className={styles.Background} onClick={closeModal}></div>
@@ -90,62 +97,57 @@ const FilterModal = ({ isActive, setIsModalActive }: IFilterModalProps) => {
             </div>
 
             <div className={styles.Modal}>
-                <div className={styles.Complete_Select_Container}>
-                    <Label label="Modelos" />
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <div className={styles.Complete_Select_Container}>
+                        <Label label="Cor" />
 
-                    <select id="Modelos" onChange={(e) => setModels(e.target.value)}>
-                        {carModels.map((item) => (
-                            <option value={item.value} key={item.id}>{item.title}</option>
-                        ))}
-                    </select>
-                </div>
-                <div className={styles.Complete_Select_Container}>
-                    <Label label="Cor" />
-
-                    <select id="Cor" onChange={(e) => setColors(e.target.value)}>
-                        {carColors.map((item) => (
-                            <option value={item.value} key={item.id}>{item.title}</option>
-                        ))}
-                    </select>
-                </div>
-                <div className={styles.Complete_Select_Container}>
-                    <Label label="Ano" />
-
-                    <select id="Ano" onChange={(e) => setYears(e.target.value)}>
-                        {carYears.map((item) => (
-                            <option value={item.value} key={item.id}>{item.title}</option>
-                        ))}
-                    </select>
-                </div>
-
-                <div className={styles.pricing_container}>
-                    <div className={styles.pricing_input_container}>
-                        <Label label="Preço mín." />
-                        <input 
-                            type="number" 
-                            id="preçomin" 
-                            value={minPrice} 
-                            placeholder="Preço mínimo" 
-                            className={styles.Input} 
-                            onChange={(e) => setMinPrice(Number(e.target.value))} />
+                        <select id="Cor" {...register('color')}>
+                            {carColors.map((item) => (
+                                <option value={item.value} key={item.id}>{item.title}</option>
+                            ))}
+                        </select>
                     </div>
-                    <div className={styles.pricing_input_container}>
-                        <Label label="Preço máx." />
-                        <input 
-                            type="number" 
-                            id="preçomáx" 
-                            value={maxPrice} 
-                            placeholder="Preço máximo" 
-                            className={styles.Input}
-                            onChange={(e) => setMaxPrice(Number(e.target.value))} />
+                    <div className={styles.Complete_Select_Container}>
+                        <Label label="Ano" />
+
+                        <select id="Ano" {...register('year')}>
+                            {carYears.map((item) => (
+                                <option value={item.value} key={item.id}>{item.title}</option>
+                            ))}
+                        </select>
                     </div>
-                </div>
 
-                {error.length > 1 && <p className={styles.error_message}>{error}</p>}
+                    <div className={styles.pricing_container}>
+                        <div className={styles.pricing_input_container}>
+                            <Label label="Preço mín." />
+                            <input 
+                                type="number" 
+                                id="preçomin" 
+                                placeholder="Preço mínimo" 
+                                className={styles.Input} 
+                                {...register('minPrice')} />
+                            {errors.minPrice && (
+                                <p className={styles.error_message}>{errors.minPrice.message}</p>
+                            )}
+                        </div>
+                        <div className={styles.pricing_input_container}>
+                            <Label label="Preço máx." />
+                            <input 
+                                type="number" 
+                                id="preçomáx" 
+                                placeholder="Preço máximo" 
+                                className={styles.Input}
+                                {...register('maxPrice')} />
+                            {errors.maxPrice && (
+                                <p className={styles.error_message}>{errors.maxPrice.message}</p>
+                            )}
+                        </div>
+                    </div>
 
-                <div className={styles.Button_Container}>
-                    <Button title="Salvar" onClick={handleFilter} />
-                </div>
+                    <div className={styles.Button_Container}>
+                        <Submit title="Salvar" />
+                    </div>
+                </form>
             </div>
         </>
     )

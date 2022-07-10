@@ -1,12 +1,9 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.module.scss';
-import HomePage from 'src/pages/Home';
 import reportWebVitals from './reportWebVitals';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import Controller from './Controller';
 import { VehicleContextProvider } from './contexts/VehicleContext';
-import LoginPage from './pages/Login';
-import RegisterPage from './pages/Register';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 
 const root = ReactDOM.createRoot(
@@ -14,15 +11,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <VehicleContextProvider>
-    <React.StrictMode>
-      <Router>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-        </Routes>
-      </Router>
-    </React.StrictMode>
+    <Router>
+      <Controller />
+    </Router>
   </VehicleContextProvider>
 );
 

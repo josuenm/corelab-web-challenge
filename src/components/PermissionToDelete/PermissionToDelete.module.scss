@@ -1,0 +1,104 @@
+@import 'src/styles/break-points.scss';
+@import 'src/styles/variables.scss';
+@import 'src/styles/font-weight.scss';
+
+
+
+.Background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba($color: #ccc,$alpha:.9);
+}
+
+
+.Back_Button {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: .5rem;
+
+    transition: ease .4s background-color;
+    &:active {
+        background-color: #fff;
+    }
+    @include desktop {
+        &:hover {
+            background-color: #eee;
+        }
+    }
+}
+
+
+.Modal {
+    width: 90%;
+    
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    background-color: #fff;
+    padding: 1.5rem 2rem;
+    border-radius: .5rem;
+    
+    @include tablet {
+        width: fit-content;
+    }
+
+    .Title {
+        text-align: center;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+    }
+
+    .Button_Set {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 3rem;
+
+        button {
+            width: 100%;
+            border: 0;
+            padding: .5rem 0;
+            font-size: 1.2rem;
+            line-height: 1.6rem;
+            border-radius: .25rem;
+            font-weight: $semi-bold;
+
+
+            @include tablet {
+                width: 250px;
+            }
+
+            transition: ease .4s opacity;
+            &:hover {
+                opacity: .8;
+            }
+
+            &.Delete {
+                background-color: rgb(230, 73, 73);
+                color: #fff;
+            }
+            
+            &.NoDelete {
+                background-color: $primary;
+                color: #fff;
+            }
+        }
+    }
+}

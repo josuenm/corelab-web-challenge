@@ -1,48 +1,48 @@
 import styles from "./Card.module.scss";
-import DeleteIcon from "src/assets/delete_icon.svg"
 import FavoriteOutlinedIcon from "src/assets/favorite_outlined_icon.svg"
 import FavoriteIcon from "src/assets/favorite_icon.svg"
-
-
-interface ICard {
-  title: string;
-  price: number;
-  description: string;
-  year: number;
-  isFavorited?: boolean;
-}
+import { memo, useContext } from "react";
+import { IVehicleContextProps, VehicleContext } from "src/contexts/VehicleContext";
+import { IVehicle } from "src/types/Vehicle";
+import { Link } from "react-router-dom";
 
 
 
-const Card = (props: ICard) => {
+
+const CardComponent = ({ data }: { data: IVehicle }) => {
+
+  const { handleFavorite } = useContext(VehicleContext) as IVehicleContextProps;
 
   return (
-    <div className={styles.Card}>
-
-      <header>
-        <div className={styles.icon_container}>
-          {props.isFavorited ?(
-            <img 
-              src={FavoriteIcon} 
-              alt="Botão de adicionado ao favorito" 
-              className={styles.favorite_icon} />
-          ):(
-            <img 
-              src={FavoriteOutlinedIcon} 
-              alt="Botão de adicionar aofavorito" 
-              className={styles.favorite_icon} />
-          )}
+    <div className={styles.Card_Container}>
+      <div className={styles.icon_container} onClick={() => handleFavorite(data._id)}>
+        {data.isFavorite ?(
+          <img 
+            src={FavoriteIcon} 
+            alt="Botão de adicionado ao favorito" 
+            className={styles.favorite_icon} />
+        ):(
+          <img 
+            src={FavoriteOutlinedIcon} 
+            alt="Botão de adicionar aofavorito" 
+            className={styles.favorite_icon} />
+        )}
+      </div>
+      <Link to={'/vehicle/'+data._id}>
+        <div className={styles.Card}>
+          <h2 className={styles.card_list_title}>{data.description.slice(0, 7)}</h2>
+          <p>Preço: {data.price}</p>
+          <p>Descrição: {data.description.slice(0, 7)}</p>
+          <p>Ano: {data.year}</p>
         </div>
-        <div className={styles.icon_container}>
-          <img src={DeleteIcon} alt="Botão de remover" className={styles.delete_icon} />
-        </div>
-      </header>
-      <h2 className={styles.card_list_title}>{props.title}</h2>
-      <p>Price: {props.price}</p>
-      <p>Description: {props.description}</p>
-      <p>Year: {props.year}</p>
+      </Link>
     </div>
   );
 };
 
-export default Card;
+
+export const Card = memo(CardComponent, (prevProps, nextProps) => {
+  return Object.is(prevProps, nextProps)
+})
+
+Card.displayName = 'Card';
